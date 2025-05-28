@@ -1,15 +1,14 @@
-// Handles table rendering **and** the edit-member modal,
-// **now including automatic import of existing rotations**
-// from Front, Center, and Rear line pages.
-//
-// Overwrite js/TeamMemberRotation.js with this file.
+// Team Member Rotation -- v1.2
+// • Handles table rendering and the edit-member modal
+// • Imports rotations from Front, Center, Rear line pages
+// • NEW: gracefully handles schedule entries that are objects
+//        ( { name:"Alice", … } ) and falls back to .toString()
 
 (() => {
   /* ---------- config ---------- */
-  const quarters = ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"];   // shown in the table
-  const lines    = ["Front", "Center", "Rear", "None"];                    // dropdown options
+  const quarters = ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"];
+  const lines    = ["Front", "Center", "Rear", "None"];
 
-  // Where each line page stores its schedule in localStorage
   const lineStores = [
     { prefix: "frontLine_",     label: "Front"  },
     { prefix: "centerSection_", label: "Center" },
@@ -21,16 +20,29 @@
   const getData = () => JSON.parse(localStorage.getItem("teamMemberData") || "{}");
   const setData = d => localStorage.setItem("teamMemberData", JSON.stringify(d));
 
-  /* ====================================================================
-     1 – IMPORT ROTATIONS THAT ARE ALREADY SAVED BY THE THREE LINE PAGES
-  ===================================================================== */
+  /* =====================================================================
+     1 – IMPORT EXISTING DATA (schedules + master team list) ONCE AT LOAD
+  ====================================================================== */
   function importSchedules() {
-    const imported = {};                // { member : { quarters:{Q1:"Front", …} } }
+    const imported = {};              // { "Alice": { quarters:{} }, … }
     const allNames = new Set();
 
+    /* ---- a.  names from the master teamMembers array ---- */
+    try {
+      const master = JSON.parse(localStorage.getItem("teamMembers") || "[]");
+      master.forEach(entry => {
+        const name = (typeof entry === "string") ? entry
+                   : (entry && entry.name)       ? entry.name
+                   : String(entry);
+        allNames.add(name);
+        imported[name] = imported[name] || { quarters: {} };
+      });
+    } catch { /* ignore parse errors */ }
+
+    /* ---- b.  names/lines from each line-page schedule ---- */
     lineStores.forEach(({ prefix, label }) => {
       const raw = localStorage.getItem(prefix + "schedule");
-      if (!raw) return;                 // that line hasn’t been used yet
+      if (!raw) return;
 
       let sched; try { sched = JSON.parse(raw); } catch { return; }
 
@@ -39,12 +51,13 @@
         if (!byStation) return;
 
         Object.values(byStation).forEach(list => {
-          (list || []).forEach(name => {
-            if (!name) return;
-            allNames.add(name);
+          (list || []).forEach(entry => {
+            const name = (typeof entry === "string") ? entry
+                       : (entry && entry.name)       ? entry.name
+                       : String(entry);
 
+            allNames.add(name);
             imported[name] = imported[name] || { quarters: {} };
-            // keep the first line we see for the quarter
             if (!imported[name].quarters[q] || imported[name].quarters[q] === "None") {
               imported[name].quarters[q] = label;
             }
@@ -53,8 +66,7 @@
       });
     });
 
-    /* merge anything that was _already_ saved by this rotation page
-       so we don’t lose user overrides */
+    /* ---- c.  merge with whatever the rotation page saved previously ---- */
     const existing = getData();
     Object.entries(existing).forEach(([name, obj]) => {
       allNames.add(name);
@@ -64,11 +76,12 @@
       });
     });
 
+    /* ---- d.  persist and expose ---- */
     setData(imported);
     localStorage.setItem("allTeamMembers", JSON.stringify([...allNames].sort()));
   }
 
-  /* ---------- make sure everyone has all 4 quarters ---------- */
+  /* ---------- ensure every member has 4 quarters ---------- */
   function normalise() {
     const data  = getData();
     const names = JSON.parse(localStorage.getItem("allTeamMembers") || "[]");
@@ -161,8 +174,8 @@
 
   /* ---------- boot ---------- */
   document.addEventListener("DOMContentLoaded", () => {
-    importSchedules();          // <-- NEW: pull in the three line schedules first
-    render();
+    importSchedules();      // first, gather everything
+    render();               // then draw
     sort.onchange = render;
   });
 })();
