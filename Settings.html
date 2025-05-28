@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Workstation Scheduler</title>
+    <link rel="stylesheet" href="css/home.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to bottom, #ffffff, #e8e8e8);
+            font-family: Arial, sans-serif;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        header img { //picture size
+            max-width: 400px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        header h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin: 0;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 800px;
+        }
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            box-shadow: 3px 4.9px 16px rgba(27, 139, 249, 0.6);
+            letter-spacing: 5px;
+        }
+        .color {
+            display: block;
+            width: 0;
+            height: 0;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            position: absolute;
+            transition: 1.5s ease;
+            border-radius: 50%;
+            background-color: transparent;
+        }
+        .expanded {
+            width: 200%;
+            padding-bottom: 200%;
+            height: auto;
+        
+        }
+        @media (max-width: 600px) {
+            main {
+                width: 95%;
+            }
+            nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+            nav a {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<header>
+    <img src="graphics/beaver.jpg" alt="Logo">
+    <h1>Under Construction</h1>
+</header>
+<body>
+    <header>
+        <h1>Settings</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Create Line</h2>
+            <form id="createLineForm">
+                <label for="lineName">Name of Line:</label>
+                <input type="text" id="lineName" required><br><br>
+
+                <label for="workstations">Name of Workstations:</label>
+                <div id="workstationsContainer">
+                    <input type="text" class="workstationInput" placeholder="Enter workstation name"><br>
+                </div>
+                <button type="button" id="addWorkstationBtn">Add Another Workstation</button><br><br>
+
+                <label for="numQuarters">Number of Quarters:</label>
+                <input type="number" id="numQuarters" min="1" required><br><br>
+
+                <button type="submit" id="createLineBtn">Create Line</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <a href="index.html" class="button">Back to Home</a>
+    </footer>
+</body>
+<script>
+    document.getElementById('createLineForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const lineName = document.getElementById('lineName').value;
+        const existingLines = JSON.parse(localStorage.getItem('lines')) || [];
+        existingLines.push(lineName);
+        localStorage.setItem('lines', JSON.stringify(existingLines));
+        alert('Line created successfully!');
+    });
+</script>
+<script>
+    document.getElementById('createLineForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const lineName = document.getElementById('lineName').value.trim();
+        const numQuarters = document.getElementById('numQuarters').value.trim();
+        
+        if (lineName && numQuarters) {
+            const lines = JSON.parse(localStorage.getItem('lines')) || [];
+            
+            // Check for duplicate line names
+            if (lines.some(line => line.name === lineName)) {
+                alert('Line name already exists!');
+                return;
+            }
+    
+            // Save line configuration
+            lines.push({ name: lineName, quarters: numQuarters });
+            localStorage.setItem('lines', JSON.stringify(lines));
+            
+            alert(`Line "${lineName}" created successfully!`);
+            document.getElementById('lineName').value = '';
+            document.getElementById('numQuarters').value = '';
+        }
+    });
+    </script>
+    
+</html>

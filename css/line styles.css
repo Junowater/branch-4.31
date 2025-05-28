@@ -1,0 +1,466 @@
+/* CSS styles */
+/* Unified color scheme and softer shadows */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 20px;
+    color: #333;
+    background-color: #f8f9fa; /* Light grey background */
+}
+
+header {
+    background-color: #007bff; /* Professional blue */
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Enhanced buttons */
+button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+a.button {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: #28a745; /* Green */
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+
+a.button:hover {
+    background-color: #218838; /* Darker green */
+}
+
+footer {
+    margin-top: 20px;
+    text-align: center;
+    padding: 10px;
+    background-color: #343a40; /* Dark grey */
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 -4px 6px rgba(0,0,0,0.1);
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 10px;
+}
+th,
+td {
+    border: 1px solid #999;
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px;
+    position: relative;
+}
+
+/* Make table header consistent */
+th {
+    background-color: #007bff; /* Professional blue */
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Draggable items */
+.draggable {
+    cursor: grab;
+    padding: 4px 8px;
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #000;
+    border-radius: 12px;
+    display: inline-block;
+    margin: 2px;
+    user-select: none;
+}
+.draggable:active {
+    cursor: grabbing;
+}
+.droppable {
+    min-height: 50px;
+    background-color: #fafafa;
+}
+
+/* Dots for skill representation */
+.dot {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 2px;
+    cursor: pointer;
+}
+.black-dot {
+    background-color: black;
+}
+.white-dot {
+    background-color: white;
+    border: 1px solid black;
+}
+.yellow-dot {
+    background-color: yellow;
+    border: 1px solid black;
+}
+
+/* Quarter dots (active/inactive) */
+.quarter-dot {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 1px;
+    cursor: pointer;
+    border: 1px solid black;
+}
+.quarter-dot.active {
+    background-color: green;
+}
+.quarter-dot.inactive {
+    background-color: red;
+}
+
+/* Pool area */
+.pool {
+    border: 3px solid #999;
+    padding: 10px;
+    min-height: 100px;
+    background-color: #f9f9f9;
+    margin-top: 10px;
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+/* Inactive team member styling */
+.inactive {
+    color: gray;
+    text-decoration: line-through;
+}
+
+/* ========================================= */
+/* Unassigned Team Members Section (UPDATED) */
+/* ========================================= */
+
+#unassignedTeamMembers {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-top: 20px;
+}
+
+/* Subtle header divider under "Unassigned Team Members" */
+#unassignedTeamMembers h3 {
+    position: relative;
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #007bff; /* Professional blue underline */
+    font-weight: 700;
+    color: #007bff;
+}
+
+/* Container for quarters to appear side by side */
+.quarters-container {
+    display: flex;
+    flex-wrap: wrap; /* Wrap if not enough horizontal space */
+    gap: 20px;
+    margin-top: 10px;
+}
+
+/* Each quarter's "card" */
+.quarter-block {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 15px;
+    min-width: 200px;
+}
+
+/* Quarter heading inside the block */
+.quarter-block h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+    display: inline-block;
+    padding-bottom: 4px;
+}
+
+/* .unassigned-list: pill/badge styling */
+.unassigned-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    /* If you want horizontal pills inside each quarter, you can do display:flex.
+       But here we'll keep them stacked for readability: */
+}
+
+/* Pill styling for each unassigned member */
+.unassigned-list li {
+    display: inline-block;        /* or block if you want them each on a new line */
+    background-color: #e9ecef;
+    color: #333;
+    padding: 6px 12px;
+    border-radius: 20px;         /* Large border-radius to form a pill shape */
+    margin-bottom: 6px;          /* A little spacing between items */
+    transition: background-color 0.2s;
+    cursor: default;
+}
+
+.unassigned-list li:hover {
+    background-color: #dfe3e7; 
+}
+
+/* Distinct styling for unavailable members */
+.unassigned-list li.unavailable {
+    background-color: #f2f2f2;
+    color: #999;
+    font-style: italic;
+    cursor: not-allowed;
+    border: 1px dashed #ccc;
+    transition: none;
+}
+
+/* Lock states */
+.locked {
+    background-color: red !important;
+    color: white;
+}
+.training {
+    background-color: yellow !important;
+    color: #000;
+}
+
+/* Constraints Box */
+#constraintsBox {
+    border: 1px solid #999;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #eef;
+}
+#constraintsBox h3 {
+    margin-top: 0;
+}
+.constraint-item {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+.constraint-item label {
+    margin-left: 8px;
+}
+.constraint-actions {
+    margin-left: auto;
+}
+.constraint-actions button {
+    margin-left: 5px;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
+/* Add Constraint Form */
+#addConstraintForm {
+    margin-top: 10px;
+}
+#addConstraintForm select,
+#addConstraintForm input {
+    margin-right: 5px;
+    padding: 4px;
+    font-size: 14px;
+}
+
+/* Team Member Skills */
+#skillsTable {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 10px;
+}
+#skillsTable th,
+#skillsTable td {
+    border: 1px solid #999;
+    text-align: center;
+    vertical-align: middle;
+    padding: 6px;
+    
+    th {
+        background-color: #007bff; /* Professional blue */
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+
+#skillsTable th {
+    background-color: #f2f2f2;
+}
+
+/* Dot container for quarter dots */
+.dot-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Scrollbar Styles */
+.pool::-webkit-scrollbar,
+#unassignedBox::-webkit-scrollbar,
+#constraintsBox::-webkit-scrollbar,
+#skillsTable::-webkit-scrollbar {
+    width: 8px;
+}
+.pool::-webkit-scrollbar-track,
+#unassignedBox::-webkit-scrollbar-track,
+#constraintsBox::-webkit-scrollbar-track,
+#skillsTable::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+.pool::-webkit-scrollbar-thumb,
+#unassignedBox::-webkit-scrollbar-thumb,
+#constraintsBox::-webkit-scrollbar-thumb,
+#skillsTable::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+.pool::-webkit-scrollbar-thumb:hover,
+#unassignedBox::-webkit-scrollbar-thumb:hover,
+#constraintsBox::-webkit-scrollbar-thumb:hover,
+#skillsTable::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    table,
+    #skillsTable {
+        font-size: 12px;
+    }
+    .constraint-actions button {
+        padding: 2px 4px;
+        font-size: 10px;
+    }
+}
+
+/* Charts */
+.charts-container {
+    margin-top: 30px;
+}
+.chart-section {
+    margin-bottom: 40px;
+}
+.chart-section h3 {
+    text-align: center;
+}
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Style for the current date display */
+#currentDate {
+    font-size: 1.2em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* Styles for chart buttons */
+.chart-buttons {
+    text-align: center;
+    margin-top: 10px;
+}
+.chart-buttons button {
+    margin: 0 5px;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+/* Styles for Dates Display */
+#weeklyDates {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1em;
+    color: #555;
+}
+
+/* Remove 'X' button */
+.remove-btn {
+    background-color: transparent;
+    border: none;
+    color: red;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 5px;
+}
+.remove-btn:hover {
+    color: darkred;
+}
+
+/* Input field inside table cells */
+.team-member-input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Delete team member button */
+.delete-team-member-btn {
+    margin-left: 10px;
+    padding: 2px 5px;
+    font-size: 12px;
+    color: #fff;
+    background-color: #e74c3c; /* Red color */
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.delete-team-member-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Team member name container */
+.team-member-name-container {
+    display: flex;
+    align-items: center;
+}
+.suggestions-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-top: 2px;
+    z-index: 999;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.suggestions-list li {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 14px;
+    color: #333;
+}
+.suggestions-list li:hover {
+    background-color: #f2f2f2;
+}

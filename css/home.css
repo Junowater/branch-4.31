@@ -1,0 +1,36 @@
+/* Centering the entire body content */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    margin: 10;
+    background-color: #f4f4f4; /* Light gray background for a clean look */
+    font-family: Arial, sans-serif;
+}
+
+/* Styling the navigation container */
+nav {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Spacing between buttons */
+    text-align: center;
+}
+
+/* Styling individual navigation links */
+nav a {
+    display: block;
+    padding: 13px 18px;
+    font-size: 1.2em;
+    color: #fff; /* White text */
+    background-color: #007bff; /* Blue background */
+    text-decoration: none;
+    border-radius:10px; /* Rounded corners */
+    transition: transform 0.3s, background-color 0.3s; /* Smooth animation for hover and click */
+}
+
+/* Hover effect */
+nav a:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+

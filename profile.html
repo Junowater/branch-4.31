@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Team Member Profile</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
+    h1 { color: #222; }
+    .profile-section { margin-top: 20px; }
+    .section-title { font-weight: bold; font-size: 1.2em; margin-bottom: 5px; }
+    .info-box { background: #fff; border: 1px solid #ccc; padding: 10px; border-radius: 6px; }
+    .info-box p { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <h1 id="memberName">Loading...</h1>
+
+  <div class="profile-section">
+    <div class="section-title">Known Stations</div>
+    <div class="info-box" id="knownStations">Loading known stations...</div>
+  </div>
+
+  <div class="profile-section">
+    <div class="section-title">Quarterly Line Assignments</div>
+    <div class="info-box" id="lineAssignments">Loading assignments...</div>
+  </div>
+
+  <script src="js/profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Workstation Scheduler</title>
+    <link rel="stylesheet" href="css/home.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to bottom, #ffffff, #e8e8e8);
+            font-family: Arial, sans-serif;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        header img {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        header h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin: 0;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 800px;
+        }
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .btn {
+            font-family: sans-serif;
+            color: white;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2.8px;
+            background-color: #1b8bf9;
+            padding: 15px 50px;
+            border-radius: 5rem;
+            box-shadow: 1px 2.9px 16px rgba(27, 139, 249, 0.4);
+            transition: 1s cubic-bezier(0.01, 1.69, 0.99, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn:hover {
+            box-shadow: 3px 4.9px 16px rgba(27, 139, 249, 0.6);
+            letter-spacing: 5px;
+        }
+        .color {
+            display: block;
+            width: 0;
+            height: 0;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            position: absolute;
+            transition: 1.5s ease;
+            border-radius: 50%;
+            background-color: transparent;
+        }
+        .expanded {
+            width: 200%;
+            padding-bottom: 200%;
+            height: auto;
+        }
+        .color--blue { background-color: #1b8bf9; }
+        .color--orange { background-color: #FF6C19; }
+        .color--green { background-color: #41FF9F; }
+        .color--white { background-color: #f31b6d; }
+        footer {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        @media (max-width: 600px) {
+            main {
+                width: 95%;
+            }
+            nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+            nav a {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="graphics/channels4_profile.jpg" alt="Logo">
+        <h1>Welcome to Workstation Scheduler</h1>
+    </header>
+    <main>
+        <section>
+            <p>Welcome to the Workstation Scheduler application. This tool helps you manage your team's workstation assignments efficiently. Navigate to the scheduler to start managing assignments or explore other features.</p>
+        </section>
+        <nav>
+            <a class="btn" href="Front Line.html" data-target="Front Line.html">Front Line</a>
+            <a class="btn" href="Rear Line.html" data-target="Rear Line.html">Rear Line</a>
+            <a class="btn" href="Center Section.html" data-target="Center Section.html">Center Section</a>
+            <a class="btn" href="Team Member Rotation.html" data-target="Team Member Rotation.html">Team Member Rotation</a>
+            <a class="btn" href="Settings.html" data-target="Settings.html">Settings</a>
+            <span class="color color--blue" data-value="1"></span>
+            <span class="color color--orange" data-value="1"></span>
+            <span class="color color--green" data-value="1"></span>
+            <span class="color color--white" data-value="1"></span>
+        </nav>
+        
+    </main>
+    <footer>
+        <p>&copy; 2025 Dallosch</p>
+    </footer>
+    <audio id="clickSound" src="sounds/line load.mp3"></audio>
+    <script>
+        const buttons = document.querySelectorAll('.btn');
+        const clickSound = document.getElementById('clickSound'); // Reference the audio element
+
+        buttons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = button.getAttribute('data-target');
+                clickSound.currentTime = 0; // Reset the audio to the start
+                clickSound.play(); // Play the sound
+
+                const colors = document.querySelectorAll('.color');
+                colors.forEach(color => color.classList.add('expanded'));
+
+                setTimeout(() => {
+                    window.location.href = target; // Navigate after animation and sound
+                }, 3500); // Adjust delay to match animation duration
+            });
+        });
+    </script>
+</body>
+</html>

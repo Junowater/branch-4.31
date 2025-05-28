@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags for character encoding and viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workstation Scheduling</title>
+    <!-- Link to External CSS -->
+    <link rel="stylesheet" href="css/line styles.css">
+</head>
+<body>
+    <!-- Header section -->
+    <header>
+        <footer>
+            <a href="index.html" class="button">Back to Home</a>
+        </footer>
+        <h1>Center Section Workstation Scheduling</h1>
+        <!-- Date display -->
+        <p id="currentDate"></p>
+        <!-- Navigation buttons -->
+        <nav>
+            <button type="button" id="rotateAllBtn">Rotate Assignments</button>
+            <button type="button" id="prioritizeNewStationBtn">Prioritize New Station</button>
+            <button type="button" id="exportScheduleBtn">Export &amp; Save Schedule</button>
+            <button type="button" id="saveChangesBtn">Save Changes</button>
+            <button id="clearScheduleBtn">Clear Schedule</button>
+
+
+        </nav>
+    </header>
+    <!-- Main content area -->
+    <main>
+        <!-- Schedule Section -->
+        <section id="schedule">
+            <table id="scheduleTable">
+                <!-- Schedule table will be generated here -->
+            </table>
+        </section>
+
+        <!-- Workstation Management Section -->
+        <section id="workstationManagement">
+            <h2>Workstation Management</h2>
+            <!-- Add Workstation -->
+            <div>
+                <input type="text" id="newWorkstationName" placeholder="Enter new workstation name" />
+                <button type="button" id="addWorkstationBtn">Add Workstation</button>
+            </div>
+            <!-- Remove Workstation -->
+            <div>
+                <input type="text" id="removeWorkstationName" placeholder="Enter workstation name to remove" />
+                <button type="button" id="removeWorkstationBtn">Remove Workstation</button>
+            </div>
+        </section>
+
+        <!-- Team Member Pool Section -->
+        <section id="teamMemberPoolSection">
+            <h2>Team Member Pool</h2>
+            <div id="teamMemberPool" class="pool" ondrop="dropToPool(event)" ondragover="allowDrop(event)">
+                <!-- Team members not assigned will appear here -->
+            </div>
+        </section>
+
+        <section id="unassignedBox">
+            <h3>Unassigned Team Members</h3>
+            <div id="unassignedContent">All team members are assigned in all quarters.</div>
+        </section>
+        
+
+        <!-- Constraint Management Section -->
+        <div id="constraintManagement">
+            <h2>Constraints</h2>
+            <div id="constraintsList"></div>
+            <select id="constraintTypeSelect" onchange="updateConstraintParameterInputs()">
+                <option value="">Select Constraint Type</option>
+                <option value="noBackToBackStations">Team members cannot do (station1) and (station2) back to back</option>
+                <option value="maxOneOfTwoStationsPerDay">Team members can only work on (station) or (station) once per day</option>
+                <option value="noBackToBackThreeStations">Team members cannot work on (station), (station), or (station) back to back</option>
+                <option value="noSameStationTwice">Team members cannot be assigned to the same station twice</option>
+            </select>
+            <div id="constraintParameters"></div>
+            <button id="addConstraintBtn">Add Constraint</button>
+        </div>
+
+        <!-- Team Member Skills Section -->
+        <section id="teamMemberSkills">
+            <h2>Team Member Skills</h2>
+            <!-- New team member addition form -->
+            <div>
+                <input type="text" id="newTeamMemberName" placeholder="Enter new team member name" />
+                <button type="button" id="addTeamMemberBtn">Add Team Member</button>
+            </div>
+            <table id="skillsTable">
+                <!-- Skills table will be generated here -->
+            </table>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-container">
+            <!-- Snapshot Chart -->
+            <div class="chart-section">
+                <h3>Daily Schedule Snapshot</h3>
+                <canvas id="snapshotChart"></canvas>
+                <!-- Chart Buttons -->
+                <div class="chart-buttons">
+                    <button id="snapshotHideAllBtn">Hide All Team Members</button>
+                    <button id="snapshotShowAllBtn">Show All Team Members</button>
+                </div>
+            </div>
+            <!-- Weekly Stations Graph -->
+            <div class="chart-section">
+                <h3>Weekly Stations Overview</h3>
+                <canvas id="weeklyChart"></canvas>
+                <!-- New code: Dates Display -->
+                <div id="weeklyDates"></div>
+                <!-- Chart Buttons -->
+                <div class="chart-buttons">
+                    <button id="weeklyHideAllBtn">Hide All Team Members</button>
+                    <button id="weeklyShowAllBtn">Show All Team Members</button>
+                    <button id="resetWeekBtn">Reset Week</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <button id="deleteLastDayBtn">Delete Last Day Saved</button>
+
+    <!-- Include Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Link to External JavaScript -->
+    <script src="js/Center Section.js"></script>
+    <script src="https://unpkg.com/js-constraint/dist/js-constraint.min.js"></script>
+    
+</body>
+</html>
