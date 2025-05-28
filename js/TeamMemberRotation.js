@@ -1,132 +1,105 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const rotationChartBody = document.getElementById('rotationChartBody');
-    const sortSelect = document.getElementById('sortMode');
+// Handles table rendering **and** the edit-member modal.
+// Drop into branch-4.2-main/js/TeamMemberRotation.js
+(() => {
+  /* ---------- config ---------- */
+  const quarters = ["Quarter 1","Quarter 2","Quarter 3","Quarter 4"];
+  const lines    = ["Front","Center","Rear","None"];
 
-    const centerData = JSON.parse(localStorage.getItem('centerSection_schedule') || '{}');
-    const frontData = JSON.parse(localStorage.getItem('frontLine_schedule') || '{}');
-    const rearData = JSON.parse(localStorage.getItem('rearLine_schedule') || '{}');
+  /* ---------- short-hands ---------- */
+  const $  = s => document.querySelector(s);
+  const $$ = s => document.querySelectorAll(s);
 
-    const allQuarters = ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4", "Quarter 5"];
+  const getData = () => JSON.parse(localStorage.getItem("teamMemberData") || "{}");
+  const setData = d => localStorage.setItem("teamMemberData", JSON.stringify(d));
 
-    const extractTeamMembers = () => {
-        const teamMembersSet = new Set();
+  /* ---------- ensure every known member has a record ---------- */
+  function normalise() {
+    const data = getData();
+    const names = JSON.parse(localStorage.getItem("allTeamMembers") || "[]");
+    names.forEach(n => {
+      if (!data[n]) data[n] = {quarters:{}};
+      quarters.forEach(q => { if (!data[n].quarters[q]) data[n].quarters[q] = "None"; });
+    });
+    setData(data);
+    return data;
+  }
 
-        const extractMembers = (data) => {
-            Object.values(data).forEach(quarterData => {
-                Object.values(quarterData).forEach(members => {
-                    if (Array.isArray(members)) {
-                        members.forEach(member => {
-                            if (typeof member === 'object' && member !== null) {
-                                teamMembersSet.add(member.name || '[unnamed]');
-                            } else {
-                                teamMembersSet.add(member);
-                            }
-                        });
-                    }
-                });
-            });
-        };
+  /* ---------- table ---------- */
+  const tbody = $("#rotationChartBody");
+  const sort  = $("#sortMode");
 
-        extractMembers(centerData);
-        extractMembers(frontData);
-        extractMembers(rearData);
+  function render() {
+    const data = normalise();
+    const rows = Object.entries(data).map(([name, {quarters:qObj}]) => ({
+      name,
+      assignments: quarters.map(q => qObj[q] || "None")
+    }));
 
-        return Array.from(teamMembersSet).map(name => {
-            const activity = (schedule) => {
-                return allQuarters.reduce((count, quarter) => {
-                    const qData = schedule[quarter];
-                    if (!qData) return count;
-                    for (const station in qData) {
-                        const members = qData[station];
-                        if (Array.isArray(members)) {
-                            for (const m of members) {
-                                const mName = typeof m === 'object' && m !== null ? m.name : m;
-                                if (mName === name) return count + 1;
-                            }
-                        }
-                    }
-                    return count;
-                }, 0);
-            };
-
-            const firstQuarter = allQuarters.findIndex(quarter => {
-                const check = schedule => {
-                    const qData = schedule[quarter];
-                    if (!qData) return false;
-                    return Object.values(qData).some(members =>
-                        Array.isArray(members) && members.some(m =>
-                            (typeof m === 'object' ? m.name : m) === name
-                        )
-                    );
-                };
-                return check(centerData) || check(frontData) || check(rearData);
-            });
-
-            return {
-                name,
-                activityCount: activity(centerData) + activity(frontData) + activity(rearData),
-                firstQuarter: firstQuarter === -1 ? 99 : firstQuarter
-            };
-        });
-    };
-
-    const renderRotationChart = () => {
-        rotationChartBody.innerHTML = "";
-
-        let teamMembers = extractTeamMembers();
-
-        const mode = sortSelect ? sortSelect.value : "alpha";
-        if (mode === "assignments") {
-            teamMembers.sort((a, b) => b.activityCount - a.activityCount);
-        } else if (mode === "firstQuarter") {
-            teamMembers.sort((a, b) => a.firstQuarter - b.firstQuarter);
-        } else {
-            teamMembers.sort((a, b) => a.name.localeCompare(b.name));
-        }
-
-        teamMembers.forEach(member => {
-            const memberName = member.name;
-            const row = document.createElement('tr');
-            const nameCell = document.createElement('td');
-            nameCell.innerHTML = `<span style="cursor:pointer; text-decoration:underline;" onclick="openModal('${member.name}')">${member.name}</span>`;
-            row.appendChild(nameCell);
-
-            allQuarters.forEach(quarter => {
-                const cell = document.createElement('td');
-                let assignedStation = "-";
-
-                const findStation = (schedule) => {
-                    const quarterData = schedule[quarter];
-                    if (quarterData) {
-                        for (const station in quarterData) {
-                            const members = quarterData[station];
-                            if (Array.isArray(members)) {
-                                for (const m of members) {
-                                    const mName = typeof m === 'object' && m !== null ? m.name : m;
-                                    if (mName === memberName) {
-                                        return station;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    return null;
-                };
-
-                assignedStation = findStation(centerData) || findStation(frontData) || findStation(rearData) || "-";
-                cell.textContent = assignedStation;
-                row.appendChild(cell);
-            });
-
-            rotationChartBody.appendChild(row);
-        });
-    };
-
-    // Initial render
-    renderRotationChart();
-
-    // Re-render on sort change
-    if (sortSelect) {
-        sortSelect.addEventListener("change", renderRotationChart);
+    switch (sort.value) {
+      case "assignments":
+        rows.sort((a,b)=>b.assignments.filter(l=>l!=="None").length -
+                          a.assignments.filter(l=>l!=="None").length);
+        break;
+      case "firstQuarter":
+        rows.sort((a,b)=>(a.assignments.findIndex(l=>l!=="None")||99) -
+                          (b.assignments.findIndex(l=>l!=="None")||99));
+        break;
+      default:
+        rows.sort((a,b)=>a.name.localeCompare(b.name));
     }
-});
+
+    tbody.innerHTML = "";
+    rows.forEach(r=>{
+      const tr=document.createElement("tr");
+      tr.classList.add("clickable");
+      tr.innerHTML = `<td>${r.name}</td>` +
+                     r.assignments.map(l=>`<td>${l}</td>`).join("");
+      tr.addEventListener("click", ()=>openModal(r.name));
+      tbody.appendChild(tr);
+    });
+  }
+
+  /* ---------- modal ---------- */
+  const modal  = $("#memberModal"),
+        title  = $("#modalTitle"),
+        toggles= $("#quarterToggles"),
+        close  = $("#closeModal"),
+        save   = $("#saveRefreshBtn"),
+        prof   = $("#openProfileBtn");
+
+  function openModal(name){
+    const data  = getData();
+    const entry = data[name] || {quarters:{}};
+
+    title.textContent = `Edit Assignments for ${name}`;
+    toggles.innerHTML = "";
+
+    quarters.forEach(q=>{
+      const sel=document.createElement("select");
+      lines.forEach(l=>{
+        sel.innerHTML += `<option value="${l}"${l===entry.quarters[q]?" selected":""}>${l}</option>`;
+      });
+      sel.onchange=e=>entry.quarters[q]=e.target.value;
+
+      const label=document.createElement("label");
+      label.textContent = q+": ";
+      label.appendChild(sel);
+      toggles.appendChild(label);
+      toggles.appendChild(document.createElement("br"));
+    });
+
+    save.onclick   = ()=>{ data[name]=entry; setData(data); modal.style.display="none"; render(); };
+    prof.onclick   = ()=>{ location.href=`profile.html?name=${encodeURIComponent(name)}`; };
+
+    modal.style.display="flex";
+  }
+
+  close.onclick       = ()=>modal.style.display="none";
+  window.onclick      = e=>{ if(e.target===modal) modal.style.display="none"; };
+
+  /* ---------- boot ---------- */
+  document.addEventListener("DOMContentLoaded", ()=>{
+    render();
+    sort.addEventListener("change", render);
+  });
+})();
