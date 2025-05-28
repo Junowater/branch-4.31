@@ -5,438 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Member Rotation</title>
     <link rel="stylesheet" href="css/line styles.css">
+
+    <!-- very light modal/hover tweaks; move to your main CSS later -->
+    <style>
+        .modal        {display:none;position:fixed;inset:0;
+                       background:rgba(0,0,0,.5);align-items:center;justify-content:center}
+        .modal-content{background:#fff;padding:1rem;border-radius:8px;max-width:420px;width:92%}
+        .close        {float:right;font-size:1.4rem;cursor:pointer}
+        #rotationChart{width:100%;border-collapse:collapse}
+        #rotationChart th,#rotationChart td{border:1px solid #ccc;padding:4px;text-align:center}
+        tr.clickable:hover{background:#f0f8ff;cursor:pointer}
+    </style>
 </head>
 <body>
-    <header>
-        <footer>
-            <a href="index.html" class="button">Back to Home</a>
-        </footer>
-        <h1>Team Member Rotation Chart</h1>
-    </header>
+<header>
+    <footer><a href="index.html" class="button">Back to Home</a></footer>
+    <h1>Team Member Rotation Chart</h1>
+</header>
 
-    <main>
-
-<div style="margin: 1em;">
-    <label for="sortMode"><strong>Sort Team Members:</strong></label>
+<div class="controls">
+    <label for="sortMode">Sort&nbsp;by&nbsp;</label>
     <select id="sortMode">
-        <option value="alpha">Alphabetical (A–Z)</option>
+        <option value="alpha">Alphabetical (A-Z)</option>
         <option value="assignments">Most Active</option>
         <option value="firstQuarter">First Assigned Quarter</option>
     </select>
 </div>
 
-        <table id="rotationChart">
-            <thead>
-                <tr>
-                    <th>Team Member</th>
-                    <th>Quarter 1</th>
-                    <th>Quarter 2</th>
-                    <th>Quarter 3</th>
-                    <th>Quarter 4</th>
-                    <th>Quarter 5</th>
-                </tr>
-            </thead>
-            <tbody id="rotationChartBody">
-                <!-- Dynamically filled by JavaScript -->
-            </tbody>
-        </table>
-    </main>
+<table id="rotationChart">
+    <thead>
+        <tr>
+            <th>Team Member</th>
+            <th>Quarter&nbsp;1</th><th>Quarter&nbsp;2</th>
+            <th>Quarter&nbsp;3</th><th>Quarter&nbsp;4</th>
+        </tr>
+    </thead>
+    <tbody id="rotationChartBody"></tbody>
+</table>
 
-    <script src="js/TeamMemberRotation.js"></script>
-
-<!-- Team Member Modal -->
-  <div id="quarterToggles"></div>
-</div>
-<script>
-  const modalTitle = document.getElementById("modalTitle");
-  const openProfileBtn = document.getElementById("openProfileBtn");
-  const quarterToggles = document.getElementById("quarterToggles");
-  let currentMember = "";
-
-    currentMember = name;
-    modal.style.display = "block";
-
-    const lines = ["Front", "Center", "Rear", "None"];
-    const quarters = ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"];
-    const memberData = JSON.parse(localStorage.getItem("teamMemberData") || "{}");
-    const entry = memberData[name] || { quarters: {} };
-
-    quarterToggles.innerHTML = "";
-    quarters.forEach(q => {
-      const line = entry.quarters?.[q] || "None";
-      const select = document.createElement("select");
-      select.innerHTML = lines.map(l => \`<option value="\${l}" \${l === line ? 'selected' : ''}>\${l}</option>\`).join("");
-      select.onchange = (e) => {
-        entry.quarters[q] = e.target.value;
-        memberData[name] = entry;
-        localStorage.setItem("teamMemberData", JSON.stringify(memberData));
-      };
-      const label = document.createElement("label");
-      label.textContent = q + ": ";
-      label.appendChild(select);
-      quarterToggles.appendChild(label);
-      quarterToggles.appendChild(document.createElement("br"));
-    });
-
-    openProfileBtn.onclick = () => window.location.href = "profile.html?name=" + encodeURIComponent(name);
-  }
-
-  function closeModal() {
-    modal.style.display = "none";
-  }
-</script>
-
-<!-- Team Member Modal -->
-  <div id="quarterToggles"></div>
-</div>
-<script>
-  const modalTitle = document.getElementById("modalTitle");
-  const openProfileBtn = document.getElementById("openProfileBtn");
-  const quarterToggles = document.getElementById("quarterToggles");
-  let currentMember = "";
-
-    currentMember = name;
-    modal.style.display = "block";
-
-    const lines = ["Front", "Center", "Rear", "None"];
-    const quarters = ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"];
-    const memberData = JSON.parse(localStorage.getItem("teamMemberData") || "{}");
-    const entry = memberData[name] || { quarters: {} };
-
-    quarterToggles.innerHTML = "";
-    quarters.forEach(function(q) {
-      const line = entry.quarters && entry.quarters[q] ? entry.quarters[q] : "None";
-      const select = document.createElement("select");
-      select.innerHTML = lines.map(function(l) {
-        return '<option value="' + l + '"' + (l === line ? ' selected' : '') + '>' + l + '</option>';
-      }).join("");
-      select.onchange = function(e) {
-        entry.quarters[q] = e.target.value;
-        memberData[name] = entry;
-        localStorage.setItem("teamMemberData", JSON.stringify(memberData));
-      };
-      const label = document.createElement("label");
-      label.textContent = q + ": ";
-      label.appendChild(select);
-      quarterToggles.appendChild(label);
-      quarterToggles.appendChild(document.createElement("br"));
-    });
-
-    openProfileBtn.onclick = function() {
-      window.location.href = "profile.html?name=" + encodeURIComponent(name);
-    };
-  }
-
-  function closeModal() {
-    modal.style.display = "none";
-  }
-</script>
-
-<!-- Team Member Modal -->
-  <div id="quarterToggles"></div>
-</div>
-<script>
-  const modalTitle = document.getElementById("modalTitle");
-  const openProfileBtn = document.getElementById("openProfileBtn");
-  const saveRefreshBtn = document.getElementById("saveRefreshBtn");
-  const quarterToggles = document.getElementById("quarterToggles");
-  let currentMember = "";
-
-    currentMember = name;
-    modal.style.display = "block";
-
-    const lines = ["Front", "Center", "Rear", "None"];
-    const quarters = ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"];
-    const memberData = JSON.parse(localStorage.getItem("teamMemberData") || "{}");
-    const entry = memberData[name] || { quarters: {} };
-
-    quarterToggles.innerHTML = "";
-    quarters.forEach(function(q) {
-      const line = entry.quarters && entry.quarters[q] ? entry.quarters[q] : "None";
-      const select = document.createElement("select");
-      select.innerHTML = lines.map(function(l) {
-        return '<option value="' + l + '"' + (l === line ? ' selected' : '') + '>' + l + '</option>';
-      }).join("");
-      select.onchange = function(e) {
-        entry.quarters[q] = e.target.value;
-        memberData[name] = entry;
-        localStorage.setItem("teamMemberData", JSON.stringify(memberData));
-      };
-      const label = document.createElement("label");
-      label.textContent = q + ": ";
-      label.appendChild(select);
-      quarterToggles.appendChild(label);
-      quarterToggles.appendChild(document.createElement("br"));
-    });
-
-    saveRefreshBtn.onclick = function() {
-      modal.style.display = "none";
-      location.reload();
-    };
-
-    openProfileBtn.onclick = function() {
-      window.location.href = "profile.html?name=" + encodeURIComponent(name);
-    };
-  }
-
-  function closeModal() {
-    modal.style.display = "none";
-  }
-</script>
-
-<!-- Team Member Modal -->
-  <div id="quarterToggles"></div>
-</div>
-<script>
-  var modalTitle = document.getElementById("modalTitle");
-  var openProfileBtn = document.getElementById("openProfileBtn");
-  var saveRefreshBtn = document.getElementById("saveRefreshBtn");
-  var quarterToggles = document.getElementById("quarterToggles");
-  var currentMember = "";
-
-    currentMember = name;
-    modal.style.display = "block";
-
-    var lines = ["Front", "Center", "Rear", "None"];
-    var quarters = ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"];
-    var memberData = JSON.parse(localStorage.getItem("teamMemberData") || "{}");
-    var entry = memberData[name] || { quarters: {} };
-
-    quarterToggles.innerHTML = "";
-    quarters.forEach(function(q) {
-      var line = entry.quarters && entry.quarters[q] ? entry.quarters[q] : "None";
-      var select = document.createElement("select");
-      lines.forEach(function(l) {
-        var option = document.createElement("option");
-        option.value = l;
-        option.textContent = l;
-        if (l === line) option.selected = true;
-        select.appendChild(option);
-      });
-      select.onchange = function(e) {
-        entry.quarters[q] = e.target.value;
-        memberData[name] = entry;
-        localStorage.setItem("teamMemberData", JSON.stringify(memberData));
-      };
-      var label = document.createElement("label");
-      label.textContent = q + ": ";
-      label.appendChild(select);
-      quarterToggles.appendChild(label);
-      quarterToggles.appendChild(document.createElement("br"));
-    });
-
-    saveRefreshBtn.onclick = function() {
-      modal.style.display = "none";
-      location.reload();
-    };
-
-    openProfileBtn.onclick = function() {
-      window.location.href = "profile.html?name=" + encodeURIComponent(name);
-    };
-  }
-
-  function closeModal() {
-    modal.style.display = "none";
-  }
-</script>
-
-<!-- Team Member Modal -->
-  <h2 id="modalTitle">Edit Assignments</h2>
-  <div id="quarterToggles"></div>
-</div>
-<script>
-  var modalTitle = document.getElementById("modalTitle");
-  var openProfileBtn = document.getElementById("openProfileBtn");
-  var saveRefreshBtn = document.getElementById("saveRefreshBtn");
-  var quarterToggles = document.getElementById("quarterToggles");
-  var currentMember = "";
-
-    currentMember = name;
-    modalTitle.textContent = "Edit Assignments for " + name;
-    modal.style.display = "block";
-
-    var lines = ["Front", "Center", "Rear", "None"];
-    var quarters = ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"];
-    var memberData = JSON.parse(localStorage.getItem("teamMemberData") || "{}");
-    var entry = memberData[name] || { quarters: {} };
-
-    quarterToggles.innerHTML = "";
-    quarters.forEach(function(q) {
-      var line = entry.quarters && entry.quarters[q] ? entry.quarters[q] : "None";
-      var select = document.createElement("select");
-      lines.forEach(function(l) {
-        var option = document.createElement("option");
-        option.value = l;
-        option.textContent = l;
-        if (l === line) option.selected = true;
-        select.appendChild(option);
-      });
-      select.onchange = function(e) {
-        entry.quarters[q] = e.target.value;
-        memberData[name] = entry;
-        localStorage.setItem("teamMemberData", JSON.stringify(memberData));
-      };
-      var label = document.createElement("label");
-      label.textContent = q + ": ";
-      label.appendChild(select);
-      quarterToggles.appendChild(label);
-      quarterToggles.appendChild(document.createElement("br"));
-    });
-
-    saveRefreshBtn.onclick = function() {
-      modal.style.display = "none";
-      location.reload();
-    };
-
-    openProfileBtn.onclick = function() {
-      window.location.href = "profile.html?name=" + encodeURIComponent(name);
-    };
-  }
-
-  function closeModal() {
-    modal.style.display = "none";
-  }
-</script>
-
-<!-- Team Member Modal -->
-  <h2 id="modalTitle">Edit Assignments</h2>
-  <div id="quarterToggles"></div>
-  <div id="modalButtons" style="margin-top: 20px;">
+<!-- Modal -->
+<div id="memberModal" class="modal">
+  <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <h2 id="modalTitle"></h2>
+      <div id="quarterToggles"></div>
+      <div style="margin-top:1rem;display:flex;gap:.5rem;justify-content:flex-end">
+          <button id="openProfileBtn"  class="button">Open Profile</button>
+          <button id="saveRefreshBtn" class="button">Save & Refresh</button>
+      </div>
   </div>
 </div>
-<script>
-  var modalTitle = document.getElementById("modalTitle");
-  var openProfileBtn = document.getElementById("openProfileBtn");
-  var saveRefreshBtn = document.getElementById("saveRefreshBtn");
-  var quarterToggles = document.getElementById("quarterToggles");
-  var currentMember = "";
 
-    currentMember = name;
-    modalTitle.textContent = "Edit Assignments for " + name;
-    modal.style.display = "block";
-
-    var lines = ["Front", "Center", "Rear", "None"];
-    var quarters = ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"];
-    var memberData = JSON.parse(localStorage.getItem("teamMemberData") || "{}");
-    var entry = memberData[name] || { quarters: {} };
-
-    quarterToggles.innerHTML = "";
-    for (var i = 0; i < quarters.length; i++) {
-      var q = quarters[i];
-      var line = entry.quarters && entry.quarters[q] ? entry.quarters[q] : "None";
-      var select = document.createElement("select");
-      for (var j = 0; j < lines.length; j++) {
-        var option = document.createElement("option");
-        option.value = lines[j];
-        option.textContent = lines[j];
-        if (lines[j] === line) {
-          option.selected = true;
-        }
-        select.appendChild(option);
-      }
-      select.onchange = (function(quarterName) {
-        return function(e) {
-          entry.quarters[quarterName] = e.target.value;
-          memberData[name] = entry;
-          localStorage.setItem("teamMemberData", JSON.stringify(memberData));
-        };
-      })(q);
-      var label = document.createElement("label");
-      label.textContent = q + ": ";
-      label.appendChild(select);
-      quarterToggles.appendChild(label);
-      quarterToggles.appendChild(document.createElement("br"));
-    }
-
-    saveRefreshBtn.onclick = function() {
-      modal.style.display = "none";
-      location.reload();
-    };
-
-    openProfileBtn.onclick = function() {
-      window.location.href = "profile.html?name=" + encodeURIComponent(name);
-    };
-  }
-
-  function closeModal() {
-    modal.style.display = "none";
-  }
-</script>
-
-<!-- Team Member Modal -->
-<div id="teamMemberModal" class="modal" style="display:none; position:fixed; top:10%; left:10%; width:80%; background:#fff; border:1px solid #ccc; padding:20px; z-index:1000;">
-  <h2 id="modalTitle">Edit Assignments</h2>
-  <div id="quarterToggles"></div>
-  <div style="margin-top: 20px;">
-    <button id="saveRefreshBtn">Save & Refresh</button>
-    <button id="openProfileBtn">View Full Profile</button>
-    <button onclick="closeModal()">Close</button>
-  </div>
-</div>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    var modal = document.getElementById("teamMemberModal");
-    var modalTitle = document.getElementById("modalTitle");
-    var openProfileBtn = document.getElementById("openProfileBtn");
-    var saveRefreshBtn = document.getElementById("saveRefreshBtn");
-    var quarterToggles = document.getElementById("quarterToggles");
-    var currentMember = "";
-
-    window.openModal = function(name) {
-      currentMember = name;
-      modalTitle.textContent = "Edit Assignments for " + name;
-      modal.style.display = "block";
-
-      var lines = ["Front", "Center", "Rear", "None"];
-      var quarters = ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"];
-      var memberData = JSON.parse(localStorage.getItem("teamMemberData") || "{}");
-      var entry = memberData[name] || { quarters: {} };
-
-      quarterToggles.innerHTML = "";
-
-      for (var i = 0; i < quarters.length; i++) {
-        (function(q) {
-          var line = entry.quarters[q] || "None";
-          var label = document.createElement("label");
-          label.textContent = q + ": ";
-
-          var select = document.createElement("select");
-          for (var j = 0; j < lines.length; j++) {
-            var option = document.createElement("option");
-            option.value = lines[j];
-            option.textContent = lines[j];
-            if (lines[j] === line) {
-              option.selected = true;
-            }
-            select.appendChild(option);
-          }
-
-          select.addEventListener("change", function(e) {
-            entry.quarters[q] = e.target.value;
-            memberData[name] = entry;
-            localStorage.setItem("teamMemberData", JSON.stringify(memberData));
-          });
-
-          label.appendChild(select);
-          quarterToggles.appendChild(label);
-          quarterToggles.appendChild(document.createElement("br"));
-        })(quarters[i]);
-      }
-
-      saveRefreshBtn.onclick = function() {
-        modal.style.display = "none";
-        location.reload();
-      };
-
-      openProfileBtn.onclick = function() {
-        window.location.href = "profile.html?name=" + encodeURIComponent(name);
-      };
-    };
-
-    window.closeModal = function() {
-      modal.style.display = "none";
-    };
-  });
-</script>
+<!-- **only one script line, no inline JS clutter** -->
+<script src="js/TeamMemberRotation.js"></script>
 </body>
 </html>
