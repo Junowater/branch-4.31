@@ -1,8 +1,10 @@
-// Team Member Rotation -- v1.2
+
+// Team Member Rotation -- v1.3
 // • Handles table rendering and the edit-member modal
-// • Imports rotations from Front, Center, Rear line pages
-// • NEW: gracefully handles schedule entries that are objects
-//        ( { name:"Alice", … } ) and falls back to .toString()
+// • Imports rotations from Front, Center, and Rear line pages
+// • Gracefully handles schedule entries that are objects ({ name:"Alice", … })
+// • NEW in v1.3: automatically prunes members who have been removed from
+//   all schedules *and* from the master `teamMembers` list.
 
 (() => {
   /* ---------- config ---------- */
@@ -69,7 +71,9 @@
     /* ---- c.  merge with whatever the rotation page saved previously ---- */
     const existing = getData();
     Object.entries(existing).forEach(([name, obj]) => {
-      allNames.add(name);
+      // ✅ keep ONLY if the name is still present somewhere else
+      if (!allNames.has(name)) return;          // ← prunes deleted members
+
       imported[name] = imported[name] || { quarters: {} };
       quarters.forEach(q => {
         if (obj.quarters && obj.quarters[q]) imported[name].quarters[q] = obj.quarters[q];
@@ -98,8 +102,8 @@
   }
 
   /* ---------- table renderer ---------- */
-  const tbody = $("#rotationChartBody");
-  const sort  = $("#sortMode");
+  const tbody = document.getElementById("rotationChartBody");
+  const sort  = document.getElementById("sortMode");
 
   function render() {
     const data = normalise();
@@ -135,12 +139,12 @@
   }
 
   /* ---------- modal ---------- */
-  const modal   = $("#memberModal");
-  const title   = $("#modalTitle");
-  const toggles = $("#quarterToggles");
-  const close   = $("#closeModal");
-  const save    = $("#saveRefreshBtn");
-  const prof    = $("#openProfileBtn");
+  const modal   = document.getElementById("memberModal");
+  const title   = document.getElementById("modalTitle");
+  const toggles = document.getElementById("quarterToggles");
+  const close   = document.getElementById("closeModal");
+  const save    = document.getElementById("saveRefreshBtn");
+  const prof    = document.getElementById("openProfileBtn");
 
   function openModal(name) {
     const data  = getData();
@@ -152,7 +156,7 @@
     quarters.forEach(q => {
       const sel = document.createElement("select");
       lines.forEach(l => {
-        sel.innerHTML += `<option value="${l}"${l === entry.quarters[q] ? " selected" : ""}>${l}</option>`;
+        sel.innerHTML += \`<option value="\${l}"\${l === entry.quarters[q] ? " selected" : ""}>\${l}</option>\`;
       });
       sel.onchange = e => entry.quarters[q] = e.target.value;
 
@@ -164,7 +168,7 @@
     });
 
     save.onclick = () => { data[name] = entry; setData(data); modal.style.display = "none"; render(); };
-    prof.onclick = () => { location.href = `profile.html?name=${encodeURIComponent(name)}`; };
+    prof.onclick = () => { location.href = \`profile.html?name=\${encodeURIComponent(name)}\`; };
 
     modal.style.display = "flex";
   }
