@@ -1,10 +1,7 @@
 
-// Team Member Rotation -- v1.3
-// • Handles table rendering and the edit-member modal
-// • Imports rotations from Front, Center, and Rear line pages
-// • Gracefully handles schedule entries that are objects ({ name:"Alice", … })
-// • NEW in v1.3: automatically prunes members who have been removed from
-//   all schedules *and* from the master `teamMembers` list.
+// Team Member Rotation -- v1.4
+// • Fixes v1.3 template‑string escape bug (backslashes before ${})
+// • Keeps auto‑prune logic for deleted members
 
 (() => {
   /* ---------- config ---------- */
@@ -156,7 +153,7 @@
     quarters.forEach(q => {
       const sel = document.createElement("select");
       lines.forEach(l => {
-        sel.innerHTML += \`<option value="\${l}"\${l === entry.quarters[q] ? " selected" : ""}>\${l}</option>\`;
+        sel.innerHTML += `<option value="${l}"${l === entry.quarters[q] ? " selected" : ""}>${l}</option>`;
       });
       sel.onchange = e => entry.quarters[q] = e.target.value;
 
